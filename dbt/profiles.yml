@@ -1,0 +1,14 @@
+my_profile:
+  target: dev_snowflake
+  outputs:
+    dev_snowflake:
+      type: snowflake
+      user: "CJKELLY221"
+      password: "Neressa218221!"
+      account: "BQTDRJR-ZG09808"
+      database: "WALMART_DB"
+      schema: "SILVER"
+      warehouse: "COMPUTE_WH"
+      role: "ACCOUNTADMIN"
+      threads: 4
+  

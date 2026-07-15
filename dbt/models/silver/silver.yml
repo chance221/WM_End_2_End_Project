@@ -1,0 +1,113 @@
+version: 2
+
+models:
+  - name: store    
+    description: "dbt model to add/update transform table for the individual stores"    
+    columns:
+        
+        - name: "Store_id"
+          description: "store identifier"
+          tests:
+              - not_null
+              - unique
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: number
+
+        - name: "Store_type"
+          description: "store type identifier"
+          tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: varchar
+              - dbt_expectations.expect_column_value_lengths_to_be_between:
+                  min_value: 1
+                  max_value: 1
+
+        - name: "Store_size"
+          description: "Size of Store in sq. ft."
+          tests:
+              - not_null   
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: number       
+        
+        - name: "Insert_date"
+          description: "Datetime of when record was loaded into DB"
+          tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: timestamp_ntz  
+        
+        - name: "Update_date"
+          description: "Datetyime of insertion into Silver Layer"
+          tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: timestamp_ntz
+
+  - name: dept
+    description: "dbt model to add/update transform table for the individual departments"
+    data_tests:
+      - unique:
+          column_name: "Store_id || '-' || Dept_id || '-' || Date_id" 
+    
+    columns:
+        - name: "Store_id"
+          description: "store identifier"
+          tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: number   
+
+        - name: "Dept_id"
+          description: "Department identifier"
+          tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: number   
+
+        - name: "Date_id"
+          description: "Week identifier"
+          tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: date
+
+        - name: "IsHoliday"
+          description: "Boolean on if it was a holiday or not"
+          tests:
+              - not_null
+              - dbt_expectations.expect_column_values_to_be_of_type:
+                  column_type: boolean
+
+        - name: "Insert_date"
+          description: "Date record was inserted into snowflake db"
+          tests:
+            - not_null
+            - dbt_expectations.expect_column_values_to_be_of_type:
+                column_type: timestamp_ntz
+
+        - name: "Update_date"
+          description: "Date record was inserted into snowflake db"
+          tests:
+            - not_null
+            - dbt_expectations.expect_column_values_to_be_of_type:
+                column_type: timestamp_ntz
+    
+
+sources:
+
+  - name: RAW_SALES_DATA
+
+    database: WALMART_DB
+
+    schema: RAW
+
+    tables:
+      - name: DEPARTMENT
+        description: Raw Dept data ingested from snowpipe
+
+      - name: STORES
+        description: Raw Stores data ingested from snowpipe
+
+      - name: FACT
+        description: Raw Fact data ingested from snowpipe

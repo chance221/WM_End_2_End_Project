@@ -1,0 +1,8 @@
+sources:
+  - name: RAW_FACT_DATA
+    database: WALMART_DB
+    schema: RAW
+    tables:
+      - name: FACT
+        description: "Raw Fact data ingested from snowpipe"
+

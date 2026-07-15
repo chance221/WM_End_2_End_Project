@@ -1,0 +1,82 @@
+version: 2
+
+snapshots:
+  - name: fact_snapshot
+    description: "SCD Type 2 snapshot tracking raw fact data changes"
+
+    config:
+      database: WALMART_DB
+      schema: silver
+      strategy: timestamp
+      updated_at: Loaded_At
+      unique_key: "Store_Id || '-' || Date_id"
+      materialized: 'snapshot'
+
+    columns:
+      - name: Store_Id 
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: Date_id 
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: date
+
+      - name: Temperature 
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: Fuel_price 
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: Markdown1 
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: Markdown2 
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: Markdown3 
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: Markdown4
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: Markdown5 
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: CPI 
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: Unemployment
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: number
+
+      - name: IsHoliday 
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: boolean
+
+      - name: Loaded_At 
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: timestamp_ntz

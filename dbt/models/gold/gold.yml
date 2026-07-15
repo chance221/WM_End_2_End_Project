@@ -1,0 +1,113 @@
+version: 2
+
+
+models:  
+  - name: Walmart_date_dim
+    description: "View used for create visualizations for each distinct date by week and if that date includes a holiday"        
+    columns:
+
+      - name: Date_id
+        description: "Primary Key based on weekly date of sales associated with each store and department"
+        tests: 
+          - not_null
+          - unique
+          
+
+      - name: Store_Date
+        description: "Actual date of the store data"
+        tests:
+          - not_null
+          - unique
+
+      - name: Isholiday
+        description: "Boolean of if this week contained a holiday"
+        tests:
+          - not_null
+
+      - name: Insert_date
+        tests:
+          - not_null
+      
+      - name: Update_date
+        tests: 
+          - not_null
+
+
+
+  - name: Walmart_store_dim
+    description: "View used to populate store related data in visualizations"
+    columns:
+      
+      - name: Store_id
+        description: "Store identifyer. Can be grouped with Dept_id for a primary key"
+        tests:
+          - not_null
+
+      - name: Dept_id
+        description: "Department identifyer. Can be grouped with Store_id for a primary key"
+        tests:
+          - not_null
+      
+      - name: Store_type
+        description: "Store type identifier"
+        tests:
+          - not_null
+
+      - name: Store_size
+        description: "Size of stores in square feet"
+        tests:
+          - not_null
+        
+      - name: Gold_loaded_at
+        tests: 
+          - not_null
+
+
+
+  - name: Walmart_fact_table
+    description: "Sales data for each store and department. Can be used to aggregate overall store sales data"
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - Store_id
+            - Date_id
+
+    columns:
+      
+      - name: Store_id
+        description: "Store identifier"
+        tests: 
+        - not_null
+
+      - name: Store_Weekly_sales
+        description: "Weekly Sales of Store."
+        tests:
+          - not_null
+
+      - name: Fuel_price
+        description: "Fuel price during sales week"
+        tests:
+          - not_null
+          
+      - name: Store_temperature
+        description: "Area temperature of store during sales week"
+        tests:
+          - not_null
+
+      - name: Unemploment
+        description: "Unemployment of store during sales week"
+        
+      - name: Markdown1
+
+      - name: Markdown2
+
+      - name: Markdown3
+
+      - name: Markdown4
+
+      - name: Markdown5
+
+      - name: Gold_loaded_at
+        tests:
+        - not_null
+

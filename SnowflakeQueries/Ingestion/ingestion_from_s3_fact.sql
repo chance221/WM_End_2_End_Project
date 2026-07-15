@@ -1,0 +1,111 @@
+--Set theole warehouse database and schema
+
+USE ROLE ACCOUNTADMIN;
+
+USE WAREHOUSE COMPUTE_WH;
+
+--CREATE OR REPLACE DATABASE WALLMART_DB;
+USE DATABASE WALMART_DB;
+
+--CREATE OR REPLACE SCHEMA WALLMART_DB.RAW;
+USE SCHEMA WALMART_DB.RAW;
+
+
+CREATE STORAGE INTEGRATION IF NOT EXISTS WM_FACT_INT
+TYPE = EXTERNAL_STAGE
+STORAGE_PROVIDER = 'S3'
+ENABLED = TRUE
+STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::440107864885:role/wm-e2e-snowflake-role'
+STORAGE_ALLOWED_LOCATIONS = ('s3://walmart-end-to-end-project/wm-fact/')
+
+DESC INTEGRATION WM_FACT_INT;
+
+CREATE FILE FORMAT IF NOT EXISTS WM_CSV_FORMAT
+TYPE = 'CSV'
+FIELD_DELIMITER = ','
+RECORD_DELIMITER = '\n'
+SKIP_HEADER = 1
+DATE_FORMAT = 'AUTO'
+NULL_IF = ('NA', ''); 
+
+
+CREATE STAGE IF NOT EXISTS WM_FACT_S3_STAGE
+STORAGE_INTEGRATION = WM_FACT_INT
+URL = 's3://walmart-end-to-end-project/wm-fact/'
+FILE_FORMAT = WM_CSV_FORMAT;
+
+
+LIST @WALMART_DB.RAW.WM_FACT_S3_STAGE;
+
+CREATE OR REPLACE TABLE FACT
+(
+Store INT,
+Date DATE,
+Temperature NUMBER(5, 2),
+Fuel_Price NUMBER(6, 3),
+MarkDown1 NUMBER (10, 2),
+MarkDown2 NUMBER (10, 2),
+MarkDown3 NUMBER (10, 2),
+MarkDown4 NUMBER (10, 2),
+MarkDown5 NUMBER (10, 2),
+CPI NUMBER (12, 7),
+Unemployment NUMBER (5, 3),
+IsHoliday BOOLEAN,
+Loaded_At TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+);
+
+
+--create snowpipe to automatically ingest csvinto a raw schema
+CREATE OR REPLACE PIPE WALMART_DB.RAW.STAGING_TO_RAW_FACT
+AUTO_INGEST = TRUE
+AS 
+COPY INTO WALMART_DB.RAW.FACT (
+    Store,
+    Date,
+    Temperature,
+    Fuel_Price,
+    MarkDown1,
+    MarkDown2,
+    MarkDown3,
+    MarkDown4,
+    MarkDown5,
+    CPI,
+    Unemployment,
+    IsHoliday,
+    Loaded_At 
+)
+FROM (
+    SELECT
+        $1::INT,
+        $2::DATE,
+        $3::NUMBER(5,2),
+        $4::NUMBER(6,3),
+        $5::NUMBER(10,2),
+        $6::NUMBER(10,2),
+        $7::NUMBER(10,2),
+        $8::NUMBER(10,2),
+        $9::NUMBER(10,2),
+        $10::NUMBER(12,7),
+        $11::NUMBER(5,3),
+        $12::BOOLEAN,        
+        CURRENT_TIMESTAMP()
+    FROM @WALMART_DB.RAW.WM_FACT_S3_STAGE
+)
+FILE_FORMAT = (FORMAT_NAME = WALMART_DB.RAW.WM_CSV_FORMAT);
+
+SHOW PIPES;
+
+SELECT SYSTEM$PIPE_STATUS('WALLMART_DB.RAW.STAGING_TO_RAW_FACT');
+
+
+
+
+SELECT * FROM walmart_db.raw.stores;
+
+SELECT * FROM wallmart_db.silver.fact_snapshot
+WHERE unemployment is null
+
+
+SELECT * FROM WALLMART_DB.GOLD.WALMART_DATE_DIM
+
+DROP VIEW IF EXISTS WALLMART_DB.SILVER.WALMART_FACT_TABLE;

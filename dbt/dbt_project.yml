@@ -1,0 +1,35 @@
+name: "walmart_end_to_end_project"
+version: "1.0.0"
+
+profile: "my_profile"
+
+vars:
+  target_db: WALMART_DB
+  target_schema: silver
+  stage_name_stores: WALMART_DB.RAW.WM_STORES_S3_STAGE
+  stage_name_fact: WALMART_DB.RAW.WM_FACT_S3_STAGE
+  stage_name_dept: WALMART_DB.RAW.WM_DEPT_S3_STAGE
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+
+models:
+  walmart_end_to_end_project:
+    gold:
+      +schema: gold 
+      +materialized: view
+      +tags: ["gold"]
+
+    silver:
+      +schema: silver
+      +materialized: table
+      +tags: ["silver"]
