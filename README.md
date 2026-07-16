@@ -30,7 +30,7 @@ A DBT job can then handle the transformation in the Silver and Gold Layers prepa
 
 
 
-### Sales By Store Type AndMonth
+### Sales By Store Type And Month
 
 <img width="1406" height="832" alt="SalesByStoreTypeAndMonth" src="https://github.com/user-attachments/assets/659cf5c3-75f8-436d-932b-3111c44b7751" />
 
