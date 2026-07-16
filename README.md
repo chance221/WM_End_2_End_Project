@@ -3,11 +3,12 @@
 <img width="1261" height="549" alt="image" src="https://github.com/user-attachments/assets/85fba39c-f881-4b4d-a30e-771bbc4278a6" />
 
 
-This ELT project is to demonstrate how to create a data pipeline that is able to upload the files into S3 Cloud storage ingest .csv data using Python then, using n integration with a Snowflake account create the beginning stages of the ingestion process. 
+This ELT project is to demonstrate how to create a data pipeline that is capable of uploading .csv files into S3 Cloud storage using Python, then automatically ingest the data into Snowflake, using an integration with the S3 storage location.
 
 New files are automatically loaded into a staging table once detected then placed in the into a raw/bronze layer schema inside of Snowflake using Snowpipe.
 
-A DBT job can then handle the transformation in the Silver and Gold Layers preparing the data for analysis and visualization using Tableau
+A DBT job can then handle the transformation in the Silver and Gold Layers preparing the data for analysis and visualization using Tableau.
+
 
 
 
@@ -19,9 +20,13 @@ A DBT job can then handle the transformation in the Silver and Gold Layers prepa
 
 
 
+
+
 ### Weekly Sales By Temperature
 
 <img width="1666" height="832" alt="WeeklySalesByTemperature" src="https://github.com/user-attachments/assets/b7774e21-de1a-4db8-abbf-ae7ebdae9858" />
+
+
 
 
 
