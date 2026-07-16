@@ -3,9 +3,9 @@ my_profile:
   outputs:
     dev_snowflake:
       type: snowflake
-      user: "CJKELLY221"
-      password: "Neressa218221!"
-      account: "BQTDRJR-ZG09808"
+      user: ""
+      password: ""
+      account: ""
       database: "WALMART_DB"
       schema: "SILVER"
       warehouse: "COMPUTE_WH"
