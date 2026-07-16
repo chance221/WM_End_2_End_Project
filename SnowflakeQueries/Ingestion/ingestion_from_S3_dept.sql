@@ -18,7 +18,7 @@ CREATE STORAGE INTEGRATION IF NOT EXISTS WMART_DEPARTMENT_INT
 TYPE = EXTERNAL_STAGE
 STORAGE_PROVIDER = 'S3'
 ENABLED = TRUE
-STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::440107864885:role/wm-e2e-snowflake-role'
+STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::*************:role/wm-e2e-snowflake-role'
 STORAGE_ALLOWED_LOCATIONS = ('s3://walmart-end-to-end-project/wm-department/')
 
 DESC INTEGRATION WM_DEPARTMENT_INT;
