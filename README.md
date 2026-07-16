@@ -1,4 +1,4 @@
-# Walmart End To End Project
+# Walmart End To End Data Project
 
 <img width="1261" height="549" alt="image" src="https://github.com/user-attachments/assets/85fba39c-f881-4b4d-a30e-771bbc4278a6" />
 
